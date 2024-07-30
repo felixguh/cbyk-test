@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.cbyk.contas.application.mapper.ContaMapper;
 import br.com.cbyk.contas.application.payload.ContaPayload;
+import br.com.cbyk.contas.application.payload.SituacaoContaPayload;
 import br.com.cbyk.contas.application.response.ContaResponse;
 import br.com.cbyk.contas.domain.exceptions.ContaNaoEncontradaException;
 import br.com.cbyk.contas.domain.model.ContaEntity;
@@ -34,13 +35,32 @@ public class ContaService {
 	}
 
 	public ContaResponse consultarContaPorId(Long id) {
+		Optional<ContaEntity> contaResponse = retornaContaPorId(id);
+
+		return ContaMapper.toResponse(contaResponse.get());
+	}
+
+	private Optional<ContaEntity> retornaContaPorId(Long id) {
 		Optional<ContaEntity> contaResponse = repository.findById(id);
 
 		if (!contaResponse.isPresent()) {
 			throw new ContaNaoEncontradaException();
 		}
 
-		return ContaMapper.toResponse(contaResponse.get());
+		return contaResponse;
+	}
+
+	public ContaResponse atualizarSituacaoPorId(Long id, SituacaoContaPayload situacao) {
+		Optional<ContaEntity> contaResponse = retornaContaPorId(id);
+
+		ContaEntity contaEntity = contaResponse.get();
+
+		contaEntity.setSituacao(situacao.getSituacao());
+
+		ContaEntity contaSalva = repository.save(contaEntity);
+
+		return ContaMapper.toResponse(contaSalva);
+
 	}
 
 }
