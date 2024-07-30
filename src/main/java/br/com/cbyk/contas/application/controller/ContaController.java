@@ -3,6 +3,8 @@ package br.com.cbyk.contas.application.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,6 +32,12 @@ public class ContaController {
 	public ContaResponse criarConta(@RequestBody @Validated ContaPayload payload) {
 
 		return service.cadastrarConta(payload);
+	}
+
+	@GetMapping("/{id}")
+	public ContaResponse consultaContaPorId(@PathVariable Long id) {
+
+		return service.consultarContaPorId(id);
 	}
 
 }
