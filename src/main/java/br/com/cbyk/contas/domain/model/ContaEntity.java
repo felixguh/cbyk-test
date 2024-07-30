@@ -1,5 +1,6 @@
 package br.com.cbyk.contas.domain.model;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -21,7 +22,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Entity(name = "conta")
-public class ContaEntity {
+public class ContaEntity implements Serializable {
+
+	private static final long serialVersionUID = -8856284000280619368L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

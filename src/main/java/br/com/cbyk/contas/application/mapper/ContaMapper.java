@@ -12,12 +12,16 @@ public class ContaMapper {
 
 	public static ContaEntity toEntity(ContaPayload payload) {
 
-		return null;
+		return ContaEntity.builder().dataPagamento(payload.getDataPagamento())
+				.dataVencimento(payload.getDataVencimento()).descricao(payload.getDescricao()).valor(payload.getValor())
+				.build();
 	}
 
 	public static ContaResponse toResponse(ContaEntity entity) {
 
-		return null;
+		return ContaResponse.builder().dataPagamento(entity.getDataPagamento())
+				.dataVencimento(entity.getDataVencimento()).descricao(entity.getDescricao()).idConta(entity.getId())
+				.situacao(entity.getSituacao()).build();
 	}
 
 }
