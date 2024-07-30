@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>br.com.cbyk</groupId>
-	<artifactId>CbykProject</artifactId>
+	<artifactId>cbyk-test</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>cbyk-test</name>
 	<description>Demo project for Spring Boot</description>
