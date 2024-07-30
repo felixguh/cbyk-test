@@ -32,19 +32,19 @@ public class ContaEntity implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(name = "data_vencimento")
+	@Column(name = "data_vencimento", nullable = false)
 	private LocalDate dataVencimento;
 
 	@Column(name = "data_pagamento")
 	private LocalDate dataPagamento;
 
-	@Column(name = "valor")
+	@Column(name = "valor", nullable = false)
 	private BigDecimal valor;
 
-	@Column(name = "descricao")
+	@Column(name = "descricao", nullable = false)
 	private String descricao;
 
-	@Column(name = "situacao")
+	@Column(name = "situacao", nullable = false)
 	@Enumerated(EnumType.STRING)
 	private Situacao situacao;
 
