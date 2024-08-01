@@ -2,6 +2,7 @@ package br.com.cbyk.contas.domain.service;
 
 import static java.util.Objects.nonNull;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -90,7 +91,7 @@ public class ContaService {
 		return ContaMapper.toResponse(contaAtualizada);
 	}
 
-	public Page<ContaEntity> search(LocalDate dataVencimento, String descricao, Pageable pageable) {
+	public Page<ContaEntity> pesquisar(LocalDate dataVencimento, String descricao, Pageable pageable) {
 
 		ContaSpecification contaSpecification = new ContaSpecification();
 
@@ -121,6 +122,11 @@ public class ContaService {
 			return this.repository.findAll(contaSpecification, pageable);
 		}
 
+	}
+
+	public BigDecimal consultaValorTotalPorPeriodo(LocalDate dataInicio, LocalDate dataFim) {
+
+		return repository.findTotalByDateRange(dataInicio, dataFim);
 	}
 
 }

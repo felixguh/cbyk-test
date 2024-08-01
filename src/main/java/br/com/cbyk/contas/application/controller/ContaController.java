@@ -1,5 +1,6 @@
 package br.com.cbyk.contas.application.controller;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,13 +78,20 @@ public class ContaController {
 	}
 
 	@GetMapping
-	public Page<ContaEntity> getEntities(@RequestParam(required = false) LocalDate dataVencimento,
+	public Page<ContaEntity> pesquisar(@RequestParam(required = false) LocalDate dataVencimento,
 			@RequestParam(required = false) String descricao, @RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "10") int size) {
 
 		Pageable pageable = PageRequest.of(page, size);
 
-		return service.search(dataVencimento, descricao, pageable);
+		return service.pesquisar(dataVencimento, descricao, pageable);
+	}
+
+	@GetMapping("/total")
+	public BigDecimal pesquisaERetornaOTotal(@RequestParam(required = true, name = "dataInicio") LocalDate dataInicio,
+			@RequestParam(required = true, name = "dataFim") LocalDate dataFim) {
+
+		return service.consultaValorTotalPorPeriodo(dataInicio, dataFim);
 	}
 
 }
