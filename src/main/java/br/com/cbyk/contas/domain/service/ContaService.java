@@ -10,6 +10,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -91,7 +92,7 @@ public class ContaService {
 		return ContaMapper.toResponse(contaAtualizada);
 	}
 
-	public Page<ContaEntity> pesquisar(LocalDate dataVencimento, String descricao, Pageable pageable) {
+	public Page<ContaResponse> pesquisar(LocalDate dataVencimento, String descricao, Pageable pageable) {
 
 		ContaSpecification contaSpecification = new ContaSpecification();
 
@@ -113,14 +114,18 @@ public class ContaService {
 			listOfSpecifications.add(desricaoEspecification);
 		}
 
+		Page<ContaEntity> result = null;
+
 		if (listOfSpecifications.size() == 2) {
-			return this.repository.findAll(
+			result = this.repository.findAll(
 					Specification.where(listOfSpecifications.get(0)).or(listOfSpecifications.get(1)), pageable);
 		} else if (listOfSpecifications.size() == 1) {
-			return this.repository.findAll(listOfSpecifications.get(0), pageable);
+			result = this.repository.findAll(listOfSpecifications.get(0), pageable);
 		} else {
-			return this.repository.findAll(contaSpecification, pageable);
+			result = this.repository.findAll(contaSpecification, pageable);
 		}
+
+		return result.map(ContaMapper::toResponse);
 
 	}
 

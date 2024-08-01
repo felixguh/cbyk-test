@@ -78,7 +78,7 @@ public class ContaController {
 	}
 
 	@GetMapping
-	public Page<ContaEntity> pesquisar(@RequestParam(required = false) LocalDate dataVencimento,
+	public Page<ContaResponse> pesquisar(@RequestParam(required = false) LocalDate dataVencimento,
 			@RequestParam(required = false) String descricao, @RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "10") int size) {
 
