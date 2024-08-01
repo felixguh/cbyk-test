@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import br.com.cbyk.contas.application.advice.FieldErrorResponse;
+import br.com.cbyk.contas.application.mapper.ContaMapper;
 import br.com.cbyk.contas.application.payload.ContaCsvPayload;
 import br.com.cbyk.contas.application.response.ContaErrorResponse;
 import br.com.cbyk.contas.domain.enums.Campo;
@@ -30,8 +31,11 @@ public class CsvContaService {
 
 	private final ValidaCamposService validaCamposService;
 
-	public CsvContaService(final ValidaCamposService validaCamposService) {
+	private final ContaService contaService;
+
+	public CsvContaService(final ValidaCamposService validaCamposService, final ContaService contaService) {
 		this.validaCamposService = validaCamposService;
+		this.contaService = contaService;
 	}
 
 	public void receberArquivo(MultipartFile file) throws IOException {
@@ -45,6 +49,9 @@ public class CsvContaService {
 			throw new CsvErrosEncontradosExceptions(campoErros);
 		}
 
+		list.stream().map(ContaMapper::toPayload).forEach(item -> {
+			contaService.cadastrarConta(item);
+		});
 	}
 
 	private void validarRegistros(List<ContaCsvPayload> list, List<ContaErrorResponse> campoErros) {
@@ -100,12 +107,10 @@ public class CsvContaService {
 
 	private void convertItemsToObject(String[] linhas, List<ContaCsvPayload> lista) {
 		if (linhas.length > 0) {
-			
-			ContaCsvPayload response = ContaCsvPayload.builder()
-					.dataVencimento(getValue(linhas, 1))
-					.dataPagamento(getValue(linhas, 2))
-					.valor(getValue(linhas, 3))
-					.descricao(getValue(linhas, 4)).build();
+
+			ContaCsvPayload response = ContaCsvPayload.builder().dataVencimento(getValue(linhas, 0))
+					.dataPagamento(getValue(linhas, 1)).valor(getValue(linhas, 2)).descricao(getValue(linhas, 3))
+					.build();
 
 			lista.add(response);
 		}
