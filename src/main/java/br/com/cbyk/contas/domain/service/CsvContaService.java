@@ -17,8 +17,9 @@ import br.com.cbyk.contas.application.advice.FieldErrorResponse;
 import br.com.cbyk.contas.application.payload.ContaCsvPayload;
 import br.com.cbyk.contas.application.response.ContaErrorResponse;
 import br.com.cbyk.contas.domain.enums.Campo;
-import br.com.cbyk.contas.domain.exceptions.QuantidadeDeCabecalhoNaoESuficienteException;
 import br.com.cbyk.contas.domain.exceptions.CabecalhosNaoSaoIguais;
+import br.com.cbyk.contas.domain.exceptions.CsvErrosEncontradosExceptions;
+import br.com.cbyk.contas.domain.exceptions.QuantidadeDeCabecalhoNaoESuficienteException;
 
 @Service
 public class CsvContaService {
@@ -33,7 +34,7 @@ public class CsvContaService {
 		this.validaCamposService = validaCamposService;
 	}
 
-	public List<ContaErrorResponse> receberArquivo(MultipartFile file) throws IOException {
+	public void receberArquivo(MultipartFile file) throws IOException {
 		List<ContaCsvPayload> list = proecessarArquivoEConverterParaObjeto(file);
 
 		List<ContaErrorResponse> campoErros = new ArrayList<>();
@@ -41,10 +42,8 @@ public class CsvContaService {
 		validarRegistros(list, campoErros);
 
 		if (!campoErros.isEmpty()) {
-			return campoErros;
+			throw new CsvErrosEncontradosExceptions(campoErros);
 		}
-
-		return null;
 
 	}
 
@@ -101,15 +100,26 @@ public class CsvContaService {
 
 	private void convertItemsToObject(String[] linhas, List<ContaCsvPayload> lista) {
 		if (linhas.length > 0) {
-
+			
 			ContaCsvPayload response = ContaCsvPayload.builder()
-					.dataVencimento(Optional.ofNullable(linhas[0]).orElse(null))
-					.dataPagamento(Optional.ofNullable(linhas[1]).orElse(null))
-					.valor(Optional.ofNullable(linhas[2]).orElse(null))
-					.descricao(Optional.ofNullable(linhas[3]).orElse(null)).build();
+					.dataVencimento(getValue(linhas, 1))
+					.dataPagamento(getValue(linhas, 2))
+					.valor(getValue(linhas, 3))
+					.descricao(getValue(linhas, 4)).build();
 
 			lista.add(response);
 		}
+	}
+
+	private String getValue(String[] linhas, int posicao) {
+
+		try {
+			return Optional.ofNullable(linhas[posicao]).orElse("");
+		} catch (ArrayIndexOutOfBoundsException e) {
+
+			return "";
+		}
+
 	}
 
 	private static void validarCabecalho(List<String> headers) {
