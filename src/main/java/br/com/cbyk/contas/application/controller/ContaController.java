@@ -24,7 +24,6 @@ import br.com.cbyk.contas.application.payload.AtualizarContaPayload;
 import br.com.cbyk.contas.application.payload.ContaPayload;
 import br.com.cbyk.contas.application.payload.SituacaoContaPayload;
 import br.com.cbyk.contas.application.response.ContaResponse;
-import br.com.cbyk.contas.domain.model.ContaEntity;
 import br.com.cbyk.contas.domain.service.ContaService;
 import br.com.cbyk.contas.domain.service.CsvContaService;
 import jakarta.validation.Valid;
