@@ -4,8 +4,12 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-import jakarta.annotation.Nonnull;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,16 +23,19 @@ public class ContaPayload implements Serializable {
 
 	private static final long serialVersionUID = 1938273388333605582L;
 
-	@Nonnull
+	@NotNull(message = "Data de vencimento é obrigatório!")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate dataVencimento;
 
-	@Nonnull
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate dataPagamento;
 
-	@Nonnull
+	@NotNull(message = "Valor é obrigatório!")
+	@Positive(message = "Valor precisa ser positivo!")
 	private BigDecimal valor;
 
-	@NotEmpty
+	@NotEmpty(message = "Descrição é obrigatória!")
+	@Size(min = 3, max = 255, message = "Mínimo permitido {value} e Maximo permitido {value} caracteres!")
 	private String descricao;
 
 }
