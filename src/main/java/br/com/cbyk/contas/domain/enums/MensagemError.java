@@ -10,8 +10,12 @@ public enum MensagemError {
 	FORMATO_DATA("O formato da data está inválido - Ex: yyyy-MM-dd!"),
 
 	VALOR_BIGDECIMAL("O valor está inválido - Ex: 10.00!"),
+	
+	TAMANHO_INVALIDO("Quantidade de caracteres inválidos, precisam estar entre 3 e 255!"),
 
 	VALOR_POSITIVO("O valor precisa ser positivo - Ex: 10.00!");
+	
+	
 
 	private String mensagem;
 

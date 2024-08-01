@@ -17,20 +17,27 @@ public class ValidaCamposService {
 
 	public boolean validateBigDecimal(String value) {
 
-		try {
-			new BigDecimal(value);
+		if (nonNull(value) && !value.isEmpty()) {
+			try {
+				new BigDecimal(value);
 
-		} catch (NumberFormatException e) {
-			return false;
+			} catch (NumberFormatException e) {
+				return false;
+			}
 		}
 
 		return true;
 	}
 
 	public boolean validateIfIsPositive(String value) {
-		BigDecimal result = new BigDecimal(value);
+		if (nonNull(value) && !value.isEmpty()) {
+			BigDecimal result = new BigDecimal(value);
 
-		return (result.compareTo(BigDecimal.ZERO) > 0);
+			return (result.compareTo(BigDecimal.ZERO) > 0);
+		}
+
+		return true;
+
 	}
 
 	public boolean validateFormatDate(String value) {
@@ -59,6 +66,15 @@ public class ValidaCamposService {
 		} catch (ParseException e) {
 			return false;
 		}
+	}
+
+	public boolean validateIfFieldHasTheCorrectSize(String value) {
+		if (nonNull(value) && !value.isEmpty()) {
+
+			return (value.length() >= 3 && value.length() <= 255);
+		}
+
+		return true;
 	}
 
 	public boolean validateIfValueIsNotNullOrEmpty(String value) {

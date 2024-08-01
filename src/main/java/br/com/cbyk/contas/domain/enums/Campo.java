@@ -17,7 +17,7 @@ public enum Campo {
 						.mensagem(MensagemError.CAMPO_NULO_OU_VAZIO.getMensagem()).tipo(TIPO_VALIDACAO).build());
 			}
 
-			if (!validation.validateFormatDate(value)) {
+			if (validation.validateIfValueIsNotNullOrEmpty(value) && !validation.validateFormatDate(value)) {
 				errors.add(FieldErrorResponse.builder().campo(this.getNome()).mensagem(TIPO_VALIDACAO)
 						.mensagem(MensagemError.FORMATO_DATA.getMensagem()).tipo(TIPO_VALIDACAO).build());
 			}
@@ -50,9 +50,7 @@ public enum Campo {
 			if (!validation.validateIfIsPositive(value)) {
 				errors.add(FieldErrorResponse.builder().campo(this.getNome()).mensagem(TIPO_VALIDACAO)
 						.mensagem(MensagemError.VALOR_POSITIVO.getMensagem()).tipo(TIPO_VALIDACAO).build());
-
 			}
-
 		}
 
 	},
@@ -62,6 +60,11 @@ public enum Campo {
 			if (!validation.validateIfValueIsNotNullOrEmpty(value)) {
 				errors.add(FieldErrorResponse.builder().campo(this.getNome()).mensagem(TIPO_VALIDACAO)
 						.mensagem(MensagemError.CAMPO_NULO_OU_VAZIO.getMensagem()).tipo(TIPO_VALIDACAO).build());
+			}
+
+			if (!validation.validateIfFieldHasTheCorrectSize(value)) {
+				errors.add(FieldErrorResponse.builder().campo(this.getNome()).mensagem(TIPO_VALIDACAO)
+						.mensagem(MensagemError.TAMANHO_INVALIDO.getMensagem()).tipo(TIPO_VALIDACAO).build());
 			}
 		}
 
