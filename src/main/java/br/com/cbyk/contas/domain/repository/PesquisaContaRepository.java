@@ -1,7 +1,10 @@
 package br.com.cbyk.contas.domain.repository;
 
+import static java.util.Objects.nonNull;
+
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -26,18 +29,16 @@ public class PesquisaContaRepository {
 
 	public Page<ContaResponse> search(LocalDate dataVencimento, String descricao, Pageable pageable) {
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-
 		CriteriaQuery<ContaEntity> cq = cb.createQuery(ContaEntity.class);
-
 		Root<ContaEntity> root = cq.from(ContaEntity.class);
 
 		Predicate predicate = cb.conjunction();
 
-		if (dataVencimento != null) {
-			predicate = cb.and(predicate, cb.equal(root.get("data_vencimento"), dataVencimento));
+		if (nonNull(dataVencimento)) {
+			predicate = cb.and(predicate, cb.equal(root.get("dataVencimento"), dataVencimento));
 		}
 
-		if (descricao != null && !descricao.isEmpty()) {
+		if (nonNull(descricao) && !descricao.isEmpty()) {
 			predicate = cb.and(predicate, cb.like(root.get("descricao"), "%" + descricao + "%"));
 		}
 
@@ -59,4 +60,5 @@ public class PesquisaContaRepository {
 
 		return new PageImpl<>(response, pageable, total);
 	}
+
 }
