@@ -2,6 +2,7 @@ package br.com.cbyk.contas.application.mapper;
 
 import static java.util.Objects.isNull;
 
+import br.com.cbyk.contas.application.payload.AtualizarContaPayload;
 import br.com.cbyk.contas.application.payload.ContaPayload;
 import br.com.cbyk.contas.application.response.ContaResponse;
 import br.com.cbyk.contas.domain.enums.Situacao;
@@ -24,6 +25,19 @@ public class ContaMapper {
 				.valor(payload.getValor())
 				.situacao(situacao)
 				.build();
+	}
+	
+	public static ContaEntity toEntityUpdate(ContaEntity entity, AtualizarContaPayload payload) {
+		
+		Situacao situacao = (isNull(payload.getDataPagamento()) ? Situacao.EM_ABERTO : Situacao.PAGO) ;
+		
+		entity.setDataPagamento(payload.getDataPagamento());
+		entity.setDataVencimento(payload.getDataVencimento());
+		entity.setDescricao(payload.getDescricao());
+		entity.setValor(payload.getValor());
+		entity.setSituacao(situacao);
+		
+		return entity;
 	}
 
 	public static ContaResponse toResponse(ContaEntity entity) {

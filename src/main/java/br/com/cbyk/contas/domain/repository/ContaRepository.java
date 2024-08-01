@@ -10,6 +10,7 @@ import br.com.cbyk.contas.domain.model.ContaEntity;
 @Repository
 public interface ContaRepository extends JpaRepository<ContaEntity, Long> {
 
+	@Override
 	Optional<ContaEntity> findById(Long id);
 
 }
