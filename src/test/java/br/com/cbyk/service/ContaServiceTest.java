@@ -5,6 +5,8 @@ import static org.mockito.Mockito.atLeastOnce;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Assertions;
@@ -14,6 +16,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 import br.com.cbyk.builders.AtualizarContaPayloadBuilder;
 import br.com.cbyk.builders.ContaEntityBuilder;
@@ -24,9 +31,12 @@ import br.com.cbyk.contas.application.payload.AtualizarContaPayload;
 import br.com.cbyk.contas.application.payload.ContaPayload;
 import br.com.cbyk.contas.application.payload.SituacaoContaPayload;
 import br.com.cbyk.contas.application.response.ContaResponse;
+import br.com.cbyk.contas.domain.enums.SearchOperation;
 import br.com.cbyk.contas.domain.enums.Situacao;
 import br.com.cbyk.contas.domain.exceptions.ContaNaoEncontradaException;
 import br.com.cbyk.contas.domain.model.ContaEntity;
+import br.com.cbyk.contas.domain.model.predicates.ContaSpecification;
+import br.com.cbyk.contas.domain.model.predicates.SearchCriteria;
 import br.com.cbyk.contas.domain.repository.ContaRepository;
 import br.com.cbyk.contas.domain.service.ContaService;
 
@@ -136,6 +146,7 @@ public class ContaServiceTest {
 		ContaEntity entity = theSame(id);
 
 		SituacaoContaPayload payload = SituacaoContaPayloadBuilder.create().getSituacaoContaPayload();
+
 		ContaResponse response = contaService.atualizarSituacaoPorId(id, payload);
 
 		theSameValidations(id, entity, response);
@@ -174,5 +185,48 @@ public class ContaServiceTest {
 		Mockito.when(repository.save(entity)).thenReturn(entity);
 
 		return entity;
+	}
+
+	@Test
+	void shouldSearchWithDescription() {
+
+		String descricao = "TESTE";
+
+		Pageable pageable = PageRequest.of(0, 1);
+
+		List<ContaEntity> contaList = ContaEntityBuilder.create().getContaEntityList();
+
+		Page<ContaEntity> pageResponse = new PageImpl<>(contaList, pageable, contaList.size());
+
+		Mockito.when(repository.findAll(Mockito.any(Specification.class), Mockito.eq(pageable)))
+				.thenReturn(pageResponse);
+
+		contaService.pesquisar(null, descricao, pageable);
+
+		contaList.forEach(item -> {
+			Assertions.assertEquals(descricao, item.getDescricao());
+		});
+
+	}
+
+	@Test
+	void shouldSearchWithDataVencimento() {
+
+		LocalDate data = LocalDate.of(2024, 8, 1);
+
+		Pageable pageable = PageRequest.of(0, 1);
+
+		List<ContaEntity> contaList = ContaEntityBuilder.create().getContaEntityList();
+
+		Page<ContaEntity> pageResponse = new PageImpl<>(contaList, pageable, contaList.size());
+
+		Mockito.when(repository.findAll(Mockito.any(Specification.class), Mockito.eq(pageable)))
+				.thenReturn(pageResponse);
+
+		contaService.pesquisar(data, null, pageable);
+
+		contaList.forEach(item -> {
+			Assertions.assertEquals(data, item.getDataVencimento());
+		});
 	}
 }
