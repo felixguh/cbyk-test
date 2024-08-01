@@ -3,7 +3,7 @@ package br.com.cbyk.contas.application.payload;
 import java.io.Serializable;
 
 import br.com.cbyk.contas.domain.enums.Situacao;
-import jakarta.annotation.Nonnull;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,7 +17,7 @@ public class SituacaoContaPayload implements Serializable {
 
 	private static final long serialVersionUID = -2347794988054079221L;
 
-	@Nonnull
+	@NotNull(message = "Situação é obrigatório!")
 	private Situacao situacao;
 
 }
