@@ -10,9 +10,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import br.com.cbyk.contas.domain.exceptions.QuantidadeDeCabecalhoNaoESuficienteException;
-import br.com.cbyk.contas.domain.exceptions.ContaNaoEncontradaException;
+import br.com.cbyk.contas.application.response.ContaErrorResponse;
 import br.com.cbyk.contas.domain.exceptions.CabecalhosNaoSaoIguais;
+import br.com.cbyk.contas.domain.exceptions.ContaNaoEncontradaException;
+import br.com.cbyk.contas.domain.exceptions.CsvErrosEncontradosExceptions;
+import br.com.cbyk.contas.domain.exceptions.QuantidadeDeCabecalhoNaoESuficienteException;
 import jakarta.servlet.http.HttpServletRequest;
 
 @RestControllerAdvice
@@ -49,6 +51,16 @@ public class GlobalControllerAdvice {
 				.message("Quantidade de itens no cabeçalhos são inválidos!").build();
 
 		return ResponseEntity.badRequest().body(response);
+
+	}
+
+	@ExceptionHandler(CsvErrosEncontradosExceptions.class)
+	@ResponseBody
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ResponseEntity<List<ContaErrorResponse>> handleCsvErrosEncontradosExceptions(
+			CsvErrosEncontradosExceptions exception, final HttpServletRequest request) {
+
+		return ResponseEntity.badRequest().body(exception.getCampoErros());
 
 	}
 
