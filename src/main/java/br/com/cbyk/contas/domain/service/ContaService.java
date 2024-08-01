@@ -63,6 +63,7 @@ public class ContaService {
 		return contaResponse;
 	}
 
+	@Transactional
 	public ContaResponse atualizarSituacaoPorId(Long id, SituacaoContaPayload situacao) {
 		Optional<ContaEntity> contaResponse = retornaContaPorId(id);
 
@@ -76,6 +77,7 @@ public class ContaService {
 
 	}
 
+	@Transactional
 	public ContaResponse atualizarContaPorId(Long id, AtualizarContaPayload payload) {
 		Optional<ContaEntity> contaResponse = retornaContaPorId(id);
 
