@@ -1,11 +1,16 @@
 package br.com.cbyk.contas.domain.service;
 
+import static java.util.Objects.nonNull;
+
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import br.com.cbyk.contas.application.mapper.ContaMapper;
@@ -13,10 +18,12 @@ import br.com.cbyk.contas.application.payload.AtualizarContaPayload;
 import br.com.cbyk.contas.application.payload.ContaPayload;
 import br.com.cbyk.contas.application.payload.SituacaoContaPayload;
 import br.com.cbyk.contas.application.response.ContaResponse;
+import br.com.cbyk.contas.domain.enums.SearchOperation;
 import br.com.cbyk.contas.domain.exceptions.ContaNaoEncontradaException;
 import br.com.cbyk.contas.domain.model.ContaEntity;
+import br.com.cbyk.contas.domain.model.predicates.ContaSpecification;
+import br.com.cbyk.contas.domain.model.predicates.SearchCriteria;
 import br.com.cbyk.contas.domain.repository.ContaRepository;
-import br.com.cbyk.contas.domain.repository.PesquisaContaRepository;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -24,12 +31,10 @@ public class ContaService {
 
 	private final ContaRepository repository;
 
-	private final PesquisaContaRepository pesquisaContaRepository;
-
 	@Autowired
-	public ContaService(final ContaRepository repository, final PesquisaContaRepository pesquisaContaRepository) {
+	public ContaService(final ContaRepository repository) {
 		this.repository = repository;
-		this.pesquisaContaRepository = pesquisaContaRepository;
+
 	}
 
 	@Transactional
@@ -83,9 +88,37 @@ public class ContaService {
 		return ContaMapper.toResponse(contaAtualizada);
 	}
 
-	public Page<ContaResponse> search(LocalDate dataVencimento, String descricao, Pageable pageable) {
+	public Page<ContaEntity> search(LocalDate dataVencimento, String descricao, Pageable pageable) {
 
-		return pesquisaContaRepository.search(dataVencimento, descricao, pageable);
+		ContaSpecification contaSpecification = new ContaSpecification();
+
+		List<ContaSpecification> listOfSpecifications = new ArrayList<>();
+
+		if (nonNull(descricao) && !descricao.isEmpty()) {
+			ContaSpecification desricaoEspecification = new ContaSpecification(contaSpecification.getCriterias());
+
+			desricaoEspecification.add(new SearchCriteria("descricao", descricao, SearchOperation.MATCH));
+
+			listOfSpecifications.add(desricaoEspecification);
+		}
+
+		if (nonNull(dataVencimento)) {
+			ContaSpecification desricaoEspecification = new ContaSpecification(contaSpecification.getCriterias());
+
+			desricaoEspecification.add(new SearchCriteria("dataVencimento", dataVencimento, SearchOperation.MATCH));
+
+			listOfSpecifications.add(desricaoEspecification);
+		}
+
+		if (listOfSpecifications.size() == 2) {
+			return this.repository.findAll(
+					Specification.where(listOfSpecifications.get(0)).or(listOfSpecifications.get(1)), pageable);
+		} else if (listOfSpecifications.size() == 1) {
+			return this.repository.findAll(listOfSpecifications.get(0), pageable);
+		} else {
+			return this.repository.findAll(contaSpecification, pageable);
+		}
+
 	}
 
 }

@@ -23,6 +23,7 @@ import br.com.cbyk.contas.application.payload.AtualizarContaPayload;
 import br.com.cbyk.contas.application.payload.ContaPayload;
 import br.com.cbyk.contas.application.payload.SituacaoContaPayload;
 import br.com.cbyk.contas.application.response.ContaResponse;
+import br.com.cbyk.contas.domain.model.ContaEntity;
 import br.com.cbyk.contas.domain.service.ContaService;
 import br.com.cbyk.contas.domain.service.CsvContaService;
 import jakarta.validation.Valid;
@@ -76,14 +77,12 @@ public class ContaController {
 	}
 
 	@GetMapping
-	public Page<ContaResponse> getEntities(
-			@RequestParam(required = false) LocalDate dataVencimento,
-			@RequestParam(required = false) String descricao, 
-			@RequestParam(defaultValue = "0") int page,
+	public Page<ContaEntity> getEntities(@RequestParam(required = false) LocalDate dataVencimento,
+			@RequestParam(required = false) String descricao, @RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "10") int size) {
-		
+
 		Pageable pageable = PageRequest.of(page, size);
-		
+
 		return service.search(dataVencimento, descricao, pageable);
 	}
 
