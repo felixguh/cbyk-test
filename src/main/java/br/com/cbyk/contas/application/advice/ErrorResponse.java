@@ -1,5 +1,7 @@
 package br.com.cbyk.contas.application.advice;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.AllArgsConstructor;
@@ -18,5 +20,6 @@ public class ErrorResponse {
 	private String message;
 	private String errorType;
 	private String uri;
+	private List<FieldErrorResponse> campoErros;
 
 }
