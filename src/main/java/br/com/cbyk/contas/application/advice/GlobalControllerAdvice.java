@@ -14,6 +14,7 @@ import br.com.cbyk.contas.application.response.ContaErrorResponse;
 import br.com.cbyk.contas.domain.exceptions.CabecalhosNaoSaoIguais;
 import br.com.cbyk.contas.domain.exceptions.ContaNaoEncontradaException;
 import br.com.cbyk.contas.domain.exceptions.CsvErrosEncontradosExceptions;
+import br.com.cbyk.contas.domain.exceptions.CsvWithoutLineToProcessException;
 import br.com.cbyk.contas.domain.exceptions.QuantidadeDeCabecalhoNaoESuficienteException;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -26,6 +27,21 @@ public class GlobalControllerAdvice {
 			final HttpServletRequest request) {
 
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+	}
+	
+	
+	
+	
+	@ExceptionHandler(CsvWithoutLineToProcessException.class)
+	@ResponseBody
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ResponseEntity<ErrorResponse> handleCsvWithoutLineToProcessException(CsvWithoutLineToProcessException exception,
+			final HttpServletRequest request) {
+
+		ErrorResponse response = ErrorResponse.builder().status(HttpStatus.BAD_REQUEST.value())
+				.message("Csv sem linhas para processamento!").build();
+
+		return ResponseEntity.badRequest().body(response);
 	}
 
 	@ExceptionHandler(CabecalhosNaoSaoIguais.class)
