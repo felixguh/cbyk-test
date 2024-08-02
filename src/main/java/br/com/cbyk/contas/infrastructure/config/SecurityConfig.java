@@ -20,13 +20,15 @@ public class SecurityConfig {
 
 	@Value("${security.password}")
 	private String password;
-
+	
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.csrf()
 		.disable()
 		.authorizeRequests()
-		.requestMatchers("/actuator/**").permitAll()
+		.requestMatchers("/actuator/**", "/swagger-ui/**", "/v3/api-docs/**", "swagger-resources/**",
+				"/swagger-resources")
+			.permitAll()
 		.anyRequest()
 		.authenticated()
 		.and()
