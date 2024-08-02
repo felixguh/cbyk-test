@@ -30,13 +30,13 @@ public class ValidaCamposService {
 	}
 
 	public boolean validateIfIsPositive(String value) {
-		if (validateBigDecimal(value)) {
+		if (nonNull(value) && !value.isEmpty() && (validateBigDecimal(value))) {
 			BigDecimal result = new BigDecimal(value);
 
 			return (result.compareTo(BigDecimal.ZERO) > 0);
 		}
 
-		return false;
+		return true;
 	}
 
 	public boolean validateFormatDate(String value) {

@@ -20,6 +20,7 @@ import br.com.cbyk.contas.application.response.ContaErrorResponse;
 import br.com.cbyk.contas.domain.enums.Campo;
 import br.com.cbyk.contas.domain.exceptions.CabecalhosNaoSaoIguais;
 import br.com.cbyk.contas.domain.exceptions.CsvErrosEncontradosExceptions;
+import br.com.cbyk.contas.domain.exceptions.CsvWithoutLineToProcessException;
 import br.com.cbyk.contas.domain.exceptions.QuantidadeDeCabecalhoNaoESuficienteException;
 
 @Service
@@ -100,6 +101,10 @@ public class CsvContaService {
 			}
 
 			convertItemsToObject(linhas, sgatList);
+		}
+
+		if (sgatList.isEmpty()) {
+			throw new CsvWithoutLineToProcessException();
 		}
 
 		return sgatList;
