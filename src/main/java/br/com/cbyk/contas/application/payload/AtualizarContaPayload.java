@@ -19,9 +19,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ContaPayload implements Serializable {
+public class AtualizarContaPayload implements Serializable {
 
-	private static final long serialVersionUID = 1938273388333605582L;
+	private static final long serialVersionUID = -6331822860168521260L;
 
 	@NotNull(message = "Data de vencimento é obrigatório!")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")

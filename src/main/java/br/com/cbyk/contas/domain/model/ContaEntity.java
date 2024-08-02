@@ -12,6 +12,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,7 +22,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Entity(name = "conta")
+@Entity
+@Table(name = "conta")
 public class ContaEntity implements Serializable {
 
 	private static final long serialVersionUID = -8856284000280619368L;
@@ -30,19 +32,19 @@ public class ContaEntity implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(name = "data_vencimento")
+	@Column(name = "data_vencimento", nullable = false)
 	private LocalDate dataVencimento;
 
 	@Column(name = "data_pagamento")
 	private LocalDate dataPagamento;
 
-	@Column(name = "valor")
+	@Column(name = "valor", nullable = false)
 	private BigDecimal valor;
 
-	@Column(name = "descricao")
+	@Column(name = "descricao", nullable = false)
 	private String descricao;
 
-	@Column(name = "situacao")
+	@Column(name = "situacao", nullable = false)
 	@Enumerated(EnumType.STRING)
 	private Situacao situacao;
 
