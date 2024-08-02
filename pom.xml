@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>br.com.cbyk</groupId>
-	<artifactId>CbykProject</artifactId>
+	<artifactId>cbyk-test</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>CbykProject</name>
+	<name>cbyk-test</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
 	<licenses>
@@ -27,9 +27,23 @@
 		<url/>
 	</scm>
 	<properties>
-		<java.version>22</java.version>
+		<java.version>17</java.version>
 	</properties>
 	<dependencies>
+		<dependency>
+	        <groupId>org.mockito</groupId>
+	        <artifactId>mockito-core</artifactId>
+	        <scope>test</scope>
+	    </dependency>
+		<dependency>
+       	 	<groupId>org.flywaydb</groupId>
+        	<artifactId>flyway-core</artifactId>
+        	<version>9.16.1</version>
+    	</dependency>
+		<dependency>
+    		<groupId>org.hibernate.validator</groupId>
+    		<artifactId>hibernate-validator</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -70,6 +84,7 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+	
 
 	<build>
 		<plugins>

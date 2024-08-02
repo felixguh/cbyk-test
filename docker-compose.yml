@@ -1,0 +1,31 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres_db
+    environment:
+      POSTGRES_DB: contadb
+      POSTGRES_USER: conta
+      POSTGRES_PASSWORD: conta123
+    ports:
+    - 5432:5432
+    volumes:
+    - postgres_data:/var/lib/postgresql/data
+    
+    
+  cbyk-test:
+    image: cbyk-test:latest
+    build:
+      context: .
+    container_name: cbyk-test
+    depends_on:
+    - postgres
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/contadb
+      SPRING_DATASOURCE_USERNAME: conta
+      SPRING_DATASOURCE_PASSWORD: conta123
+    ports:
+    - 8080:8080
+volumes:
+  postgres_data:
+    driver: local
